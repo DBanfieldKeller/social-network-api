@@ -3,11 +3,11 @@ const mongoose = require('mongoose');
 const moment = require('moment');
 
 // create reaction schema
-const reactionSchema = new Schema(
+const reactionSchema = new mongoose.Schema(
     {
         // Set custom ID 
         reactionId: {
-            type: Schema.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             default: () => new Types.ObjectId()
         },
         reactionBody: {
