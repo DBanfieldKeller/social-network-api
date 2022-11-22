@@ -1,5 +1,7 @@
-const {Schema, model} = require('mongoose');
+const mongoose = require('mongoose');
 
+// user Schema
+// TODO: add thoughts and friends, friendcount virtual
 const userSchema = new Schema(
     {
         username: {
@@ -15,4 +17,8 @@ const userSchema = new Schema(
             match: [/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/]
         }
     }
-)
+);
+
+const User = mongoose.model('User', userSchema);
+
+module.exports = User
