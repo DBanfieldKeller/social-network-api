@@ -74,7 +74,7 @@ const userController = {
                 }
                 res.json(dbUsersData);
             })
-            .catch(err => res.json(err));
+            .catch((err) => res.json(err));
     },
     // Delete a current Friend
     deleteFriend(req, res) {
@@ -88,7 +88,7 @@ const userController = {
                 }
                 res.json(dbUsersData);
             })
-            .catch(err => res.status(400).json(err));
+            .catch((err) => res.status(400).json(err));
     }
 };
 
