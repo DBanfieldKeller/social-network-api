@@ -1,6 +1,6 @@
 const { Thought, User } = require('../models');
 
-module.exports = {
+const userController = {
     // get all users
     getUsers(req, res) {
         User.find()
@@ -62,4 +62,34 @@ module.exports = {
             .then(() => res.json({ message: 'User and associated thoughts deleted!' }))
             .catch((err) => res.status(500).json(err));
     },
+    // add friend
+    addFriend(req, res) {
+        User.findOneAndUpdate({ _id: req.params.id }, { $push: { friends: req.params.friendId } }, { new: true })
+            .populate({ path: 'friends', select: ('-__v') })
+            .select('-__v')
+            .then(dbUsersData => {
+                if (!dbUsersData) {
+                    res.status(404).json({ message: 'No User with this particular ID!' });
+                    return;
+                }
+                res.json(dbUsersData);
+            })
+            .catch(err => res.json(err));
+    },
+    // Delete a current Friend
+    deleteFriend(req, res) {
+        User.findOneAndUpdate({ _id: req.params.id }, { $pull: { friends: req.params.friendId } }, { new: true })
+            .populate({ path: 'friends', select: '-__v' })
+            .select('-__v')
+            .then(dbUsersData => {
+                if (!dbUsersData) {
+                    res.status(404).json({ message: 'No User with this particular ID!' });
+                    return;
+                }
+                res.json(dbUsersData);
+            })
+            .catch(err => res.status(400).json(err));
+    }
 };
+
+module.exports = userController
