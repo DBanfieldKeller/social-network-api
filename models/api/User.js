@@ -1,8 +1,7 @@
+// require mongoose
 const mongoose = require('mongoose');
-const thoughtSchema = require ('./Thought')
 
 // user Schema
-// TODO: add thoughts and friends, friendcount virtual
 const userSchema = new mongoose.Schema(
     {
         username: {
@@ -17,11 +16,23 @@ const userSchema = new mongoose.Schema(
             unique: true,
             match: [/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/]
         },
-        thoughts: [thoughtSchema],
-
+        thoughts: [{
+            type: mongoose.Schema.Types.ObjectId, 
+            ref: 'thought'
+        }],
+        friends: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Users'
+        }]
     }
 );
 
+// get friend total
+userSchema.virtual('friendCount').get(function() {
+    return this.friends.length;
+})
+
+// create user model
 const User = mongoose.model('User', userSchema);
 
 module.exports = User
