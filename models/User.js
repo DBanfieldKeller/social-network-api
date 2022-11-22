@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 // user Schema
 // TODO: add thoughts and friends, friendcount virtual
-const userSchema = new Schema(
+const userSchema = new mongoose.Schema(
     {
         username: {
             type: String,

@@ -1,6 +1,6 @@
-const { Schema, model } = require('mongoose');
+const mongoose = require('mongoose');
 
-const thoughtSchema = new Schema({
+const thoughtSchema = new mongoose.Schema({
     thoughtText: {
         type: String,
         required: true,
