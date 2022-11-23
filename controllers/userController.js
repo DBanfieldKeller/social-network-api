@@ -40,7 +40,7 @@ const userController = {
 
     // Update a current User by ID
     updateUser({ params, body }, res) {
-        User.findOneAndUpdate({ _id: params.id }, body, { new: true})
+        User.findOneAndUpdate({ _id: params.id }, body, { new: true })
             .then(dbUserData => {
                 if (!dbUserData) {
                     res.status(404).json({ message: 'No User with this particular ID!' });
@@ -51,28 +51,31 @@ const userController = {
             .catch((err) => res.status(500).json(err))
     },
 
-    // Delete a user and associated thoughts TOBE FIXED
+    // Delete a user and associated thoughts
     deleteUser(req, res) {
         User.findOneAndDelete({ _id: req.params.id })
-            .then((user) =>
-                !user
-                    ? res.status(404).json({ message: 'No user with that ID' })
-                    : Thought.deleteMany({ _id: { $in: user.thoughts } })
-            )
-            .then(() => res.json({ message: 'User and associated thoughts deleted!' }))
+            .then((user) => {
+                if (!user) {
+                    res.status(404).json({ message: 'No user with that ID' });
+                    return;
+                } else {
+                    Thought.deleteMany({ _id: { $in: user.thoughts } });
+                    res.json({ message: 'User and associated thoughts deleted!' })
+                }
+            })
             .catch((err) => res.status(500).json(err));
     },
     // add friend
     addFriend(req, res) {
-        User.findOneAndUpdate({ _id: req.params.id }, { $push: { friends: req.params.friendId } }, { new: true })
+        User.findOneAndUpdate({ _id: req.params.id }, { $addToSet: { friends: req.params.friendId } }, { new: true })
             .populate({ path: 'friends', select: ('-__v') })
             .select('-__v')
-            .then(dbUsersData => {
-                if (!dbUsersData) {
+            .then(dbUserData => {
+                if (!dbUserData) {
                     res.status(404).json({ message: 'No User with this particular ID!' });
                     return;
                 }
-                res.json(dbUsersData);
+                res.json(dbUserData);
             })
             .catch((err) => res.json(err));
     },
