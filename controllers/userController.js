@@ -51,7 +51,7 @@ const userController = {
             .catch((err) => res.status(500).json(err))
     },
 
-    // Delete a user and associated thoughts
+    // Delete a user and associated thoughts TOBE FIXED
     deleteUser(req, res) {
         User.findOneAndDelete({ _id: req.params.id })
             .then((user) =>
