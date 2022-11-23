@@ -7,14 +7,10 @@ const thoughtController = {
         .then(({_id}) => {
             return User.findOneAndUpdate({ _id: req.params.id}, {$push: {thoughts: _id}}, {new: true});
         })
-        .then(dbThoughtData => {
-            if(!dbThoughtData) {
-                res.status(404).json({message: 'No thoughts with this particular ID!'});
-                return;
-            }
-            res.json(dbThoughtData)
+        .then(dbThoughtsData => {
+            res.json(dbThoughtsData)
         })
-        .catch(err => res.json(err)); 
+        .catch((err) => res.json(err)); 
     },
 };
 
