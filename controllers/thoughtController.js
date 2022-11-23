@@ -8,7 +8,7 @@ const thoughtController = {
                 return User.findOneAndUpdate({ _id: req.params.id }, { $push: { thoughts: _id } }, { new: true });
             })
             .then(() => {
-                res.json({message: 'New thought added'})
+                res.json({ message: 'New thought added' })
             })
             .catch((err) => res.json(err));
     },
@@ -24,22 +24,38 @@ const thoughtController = {
                 res.status(500).json(err);
             });
     },
+
     // Get thought by ID
     getThoughtById(req, res) {
         Thought.findOne({ _id: req.params.id })
-        .populate({path: 'reactions',select: '-__v'})
-        .select('-__v')
-        .then(dbThoughtsData => {
-            if(!dbThoughtsData) {
-            res.status(404).json({message: 'No thoughts with this ID!'});
-            return;
-        }
-        res.json(dbThoughtsData)
-        })
-        .catch(err => {
-            console.log(err);
-            res.sendStatus(400);
-        });
+            .populate({ path: 'reactions', select: '-__v' })
+            .select('-__v')
+            .then(dbThoughtsData => {
+                if (!dbThoughtsData) {
+                    res.status(404).json({ message: 'No thoughts with this ID!' });
+                    return;
+                }
+                res.json(dbThoughtsData)
+            })
+            .catch(err => {
+                console.log(err);
+                res.sendStatus(400);
+            });
+    },
+
+    // Update thought by ID
+    updateThoughts(req, res) {
+        Thought.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true})
+            .populate({ path: 'reactions', select: '-__v' })
+            .select('-___v')
+            .then(dbThoughtsData => {
+                if (!dbThoughtsData) {
+                    res.status(404).json({ message: 'No thoughts with this ID!' });
+                    return;
+                }
+                res.json(dbThoughtsData);
+            })
+            .catch(err => res.json(err));
     },
 
 };
