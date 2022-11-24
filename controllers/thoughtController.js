@@ -14,7 +14,7 @@ const thoughtController = {
                 } else {
                     res.json({ message: 'New thought added', dbUserData })
                 }
-                
+
             })
             .catch((err) => res.json(err));
     },
@@ -92,15 +92,19 @@ const thoughtController = {
 
     // Delete a reaction by id
     deleteReaction(req, res) {
-        Thought.findOneAndUpdate({_id: req.params.id}, {$pull: {reactions: {reactionId: req.params.reactionId}}}, {new : true})
-        .then(dbThoughtsData => {
-            if (!dbThoughtsData) {
-                res.status(404).json({message: 'No thought with this id!'});
-                return;
-            }
-            res.json(dbThoughtsData);
-        })
-        .catch((err) => res.status(400).json(err));
+        Thought.findOneAndUpdate(
+            { _id: req.params.id },
+            { $pull: { reactions: { _id: req.params.reactionId } } },
+            { runValidators: true, new: true }
+        )
+            .then(dbThoughtsData => {
+                if (!dbThoughtsData) {
+                    res.status(404).json({ message: 'No thought with this id!' });
+                    return;
+                }
+                res.json(dbThoughtsData);
+            })
+            .catch((err) => res.status(400).json(err));
     }
 
 };
